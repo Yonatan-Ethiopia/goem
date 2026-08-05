@@ -88,6 +88,6 @@ addr := flag.String("addr", ":"+port, "HTTP network address")
 
     err = srv.ListenAndServe()
 
-    errLog.Fatal(errr)
+    errLog.Fatal(err)
     
 }
