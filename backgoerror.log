@@ -1,0 +1,10 @@
+ERROR	2026/07/10 06:54:07 /home/yonatan/backgo/cmd/web/main.go:63: listen tcp: address 8080: missing port in address
+exit status 1
+ERROR	2026/07/10 06:55:06 /home/yonatan/backgo/cmd/web/main.go:63: listen tcp: address 8080: missing port in address
+exit status 1
+ERROR	2026/07/10 06:55:33 /home/yonatan/backgo/cmd/web/main.go:63: listen tcp: address 8080: missing port in address
+exit status 1
+signal: interrupt
+# backgo/cmd/web
+cmd/web/main.go:60:13: http.Serve (value of type func(l net.Listener, handler http.Handler) error) is not a type
+cmd/web/main.go:61:16: undefined: addr

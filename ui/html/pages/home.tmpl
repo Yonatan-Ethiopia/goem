@@ -1,0 +1,22 @@
+{{define "title"}}Home{{end}}
+{{define "main"}}
+<h2>Latest Snippets</h2>
+{{if .Boxes}}
+<table>
+<tr>
+<th>Title</th>
+<th>Created</th>
+<th>ID</th>
+</tr>
+{{range .Boxes}}
+<tr>
+<td><a href='/still/{{.Id}}'>{{.Title}}</a></td>
+<td>{{humanDate .Created_at}}</td>
+<td>#{{.Id}}</td>
+</tr>
+{{end}}
+</table>
+{{else}}
+<p>There's nothing to see here... yet!</p>
+{{end}}
+{{end}}
