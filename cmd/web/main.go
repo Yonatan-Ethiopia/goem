@@ -31,7 +31,9 @@ func main(){
     //add := flag.String("code", ":4000", "HTTP network address")
 
     //dsn := flag.String("dsn", "backgo:ppp@/dropbox?parseTime=true", "MySQL data source name")
-
+    for _, e := range os.Environ() {
+       log.Println(e)
+   }
     dsn := os.Getenv("DATABASE_URL")
     fmt.Printf("the data base string is: %v  \n", dsn)
     if dsn == "" {
