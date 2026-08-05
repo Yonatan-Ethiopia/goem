@@ -30,8 +30,9 @@ func main(){
     //add := flag.String("code", ":4000", "HTTP network address")
 
     //dsn := flag.String("dsn", "backgo:ppp@/dropbox?parseTime=true", "MySQL data source name")
-
-    flag.Parse()
+ for _, e := range os.Environ() {
+       log.Println(e)
+   }
     dsn := os.Getenv("DATABASE_URL")
     if dsn == "" {
         dsn = *flag.String("dsn", "postgres://web:pass@localhost:5432/goems?sslmode=disable", "PostgreSQL DSN")
