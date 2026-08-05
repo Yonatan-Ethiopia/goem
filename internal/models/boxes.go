@@ -29,27 +29,22 @@ type BoxInterface interface{
 
 func (c *BoxConn) Insert(title string, content string, expires_at int) (int, error){
     
-    stm := "INSERT INTO boxes (title, content, created, expires) VALUES (?, ?, UTC_TIMESTAMP(),DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))"
+    stmt := `INSERT INTO boxes (title, content, created, expires)
+VALUES($1, $2, NOW() AT TIME ZONE 'UTC', (NOW() AT TIME ZONE 'UTC') + ($3 * INTERVAL '1 day'))
+RETURNING id`
     
-    result, err := c.DB.Exec(stm, title, content, expires_at)
-    
-    if err != nil{
-        return 0, err
-    }
-    
-    id, err := result.LastInsertId()
-    
-    if err != nil{
-        return 0, err
-    }
-    
-    return int(id), nil
+    var id int
+err := c.DB.QueryRow(stmt, title, content, expires_at).Scan(&id)
+if err != nil {
+    return 0, err
+}
+return id, nil
 }
 
 func (c *BoxConn) Get(id int) (*RecRow, error){
-    stm := "SELECT * FROM boxes WHERE UTC_TIMESTAMP < expires AND id = ?"
+    stmt := "SELECT * FROM boxes WHERE (NOW() AT TIME ZONE 'UTC') < expires AND id = $1"
     
-    row := c.DB.QueryRow(stm, id)
+    row := c.DB.QueryRow(stmt, id)
     
     rec := &RecRow{ }
     
@@ -67,9 +62,9 @@ func (c *BoxConn) Get(id int) (*RecRow, error){
 }
 
 func (c *BoxConn) Latest() ([]*RecRow, error){
-    stm := "SELECT * FROM boxes WHERE UTC_TIMESTAMP < expires ORDER BY id DESC LIMIT 10"
+    stmt := "SELECT * FROM boxes WHERE (NOW() AT TIME ZONE 'UTC') < expires ORDER BY id DESC LIMIT 10"
     
-    rows, err := c.DB.Query(stm)
+    rows, err := c.DB.Query(stmt)
     
     if err != nil{
         return nil, err

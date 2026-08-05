@@ -2,12 +2,11 @@ package main
 
 import (
         "database/sql"
-        _ "github.com/go-sql-driver/mysql"
 
 )
 
 func openDb(dsn string) (*sql.DB, error) {
-    db, err := sql.Open("mysql", dsn)
+    db, err := sql.Open("pgx", dsn)
     if err != nil{
         return nil, err
     }

@@ -34,7 +34,7 @@ func (u *UserModel) Insert(name, email, password string) error {
         return err
     }
     stmt := `INSERT INTO users (name, email, hashed_password, created)
-VALUES(?, ?, ?, UTC_TIMESTAMP())`
+VALUES($1, $2, $3, NOW())`
     _, err = u.DB.Exec(stmt, name, email, hashedPassword)
     if err != nil{
         
@@ -55,7 +55,7 @@ func (u *UserModel) Authenticate(email, password string) (int, error){
     var id int
     var hashedPassword []byte
     
-    stmt := "SELECT id, hashed_password FROM users WHERE email = ?"
+    stmt := "SELECT id, hashed_password FROM users WHERE email = $1"
     
     err := u.DB.QueryRow(stmt, email).Scan(&id, &hashedPassword)
     if err != nil{
@@ -82,7 +82,7 @@ func (u *UserModel) Exists(id int) (bool, error){
     
     var exists bool
     
-    stmt := "SELECT EXISTS(SELECT true FROM users WHERE id = ?)"
+    stmt := "SELECT EXISTS(SELECT true FROM users WHERE id = $1)"
     
     err := u.DB.QueryRow(stmt, id).Scan(&exists)
     
