@@ -85,11 +85,9 @@ addr := flag.String("addr", ":"+port, "HTTP network address")
     }
    
     infoLog.Printf("Running on %s",*addr)
-    if os.Getenv("ENV") == "production" {
+
     err = srv.ListenAndServe()
-} else {
-    err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
-}
+
     errLog.Fatal(errr)
     
 }
