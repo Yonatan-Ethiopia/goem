@@ -5,7 +5,7 @@ import(
     "database/sql"
     "errors"
     "strings"
-    "github.com/go-sql-driver/mysql"
+    "github.com/jackc/pgx/v5/pgconn"
     "golang.org/x/crypto/bcrypt"
 )
 
@@ -36,19 +36,17 @@ func (u *UserModel) Insert(name, email, password string) error {
     stmt := `INSERT INTO users (name, email, hashed_password, created)
 VALUES($1, $2, $3, NOW())`
     _, err = u.DB.Exec(stmt, name, email, hashedPassword)
-    if err != nil{
-        
-        var mySQLError *mysql.MySQLError
-        if errors.As(err, &mySQLError){
-            if mySQLError.Number == 1062 && strings.Contains(mySQLError.Message, "users_uc_email"){
-                return ErrDuplicateEmail
-            }
+    if err != nil {
+    var pgErr *pgconn.PgError
+    if errors.As(err, &pgErr) {
+        if pgErr.Code == "23505" && strings.Contains(pgErr.ConstraintName, "users_uc_email") {
+            return ErrDuplicateEmail
         }
         return err
     }
-    
-    return nil
-    
+    return err
+}
+return nil
 }
 func (u *UserModel) Authenticate(email, password string) (int, error){
     
