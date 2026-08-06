@@ -25,6 +25,7 @@ type application struct{
     templateCache map[string]*template.Template
     formDecoder *form.Decoder
     sessionManager *scs.SessionManager
+    debugMode bool
 }
 
 func main(){
@@ -74,6 +75,7 @@ addr := flag.String("addr", ":"+port, "HTTP network address")
         templateCache : templateCache,
         formDecoder : formDecoder,
         sessionManager: sessionManager,
+        debugMode: true,
     }
 
     srv := &http.Server{
